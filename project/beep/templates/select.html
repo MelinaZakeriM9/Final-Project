@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select User</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .selected {
+            background-color: #d9edf7;
+        }
+    </style>
+    <script>
+        function selectRow(row) {
+            // Remove the selected class from all rows
+            var rows = document.querySelectorAll('tr');
+            rows.forEach(function(r) {
+                r.classList.remove('selected');
+            });
+
+            // Add the selected class to the clicked row
+            row.classList.add('selected');
+
+            // Store the selected user ID in the hidden input
+            var userId = row.getAttribute('data-user-id');
+            document.getElementById('selectedUserId').value = userId;
+
+            // Submit the form
+            document.getElementById('userForm').submit();
+        }
+    </script>
+</head>
+<body>
+    <h2>Select a User</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr onclick="selectRow(this)" data-user-id="{{ user.id }}">
+                <td>{{ user.name }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <form id="userForm" method="post" action="{% url 'home' %}">
+        {% csrf_token %}
+        <input type="hidden" id="selectedUserId" name="user_id" value="">
+    </form>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!-- <!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Home</title>
+    </head>
+    <body>
+        <h2>Home Page</h2>
+        {% if user %}
+        <p>Selected User:</p>
+        <ul>
+            <li>Name: {{ user.name }}</li>
+            <li>Username: {{user.username}}</li>
+            <li>Email: {{ user.email }}</li>
+        </ul>
+        {% else %}
+        <p>No user selected.</p>
+        {% endif %}
+
+        <h3>My events</h3>
+        {% for event in events %}
+        {% if event.creator == user.username %}
+        {{event.name}}
+        {% endif %}
+        {% endfor %}
+
+        <h3>Bought events</h3>
+        {% for event in events %}
+        {% if user.username in attendants %}
+        {{ event.name }}
+        {% endif %}
+        {% endfor %}
+
+        <h3>Available Events</h3>
+        {% for event in events %}
+        {% if event.creator ==  not user.username and  user.username not in attendant%}
+        {{event.name}}
+        {% endif %}
+        {% endfor %}
+    </body>
+</html> -->
