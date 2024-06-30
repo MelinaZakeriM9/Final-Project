@@ -1,5 +1,6 @@
 import datetime as dt
 import sqlite3 as sql
+import smtplib 
 
 conn = sql.connect('final.db')
 curs = conn.cursor()
@@ -39,6 +40,14 @@ def timeinput(v):
         except ValueError:
             print('incorrect format, pls reenter the date and time.')
 
+def send_email(event, email):
+    s = smtplib.SMTP('smtp.gmail.com', 587)
+    s.starttls()
+    s.login('www.melinazakerim9@gmail.com', 'xlsfaoboajqnurpe')
+    message = f'Thank you for your purchase of "{event}". You can view your attendance status and event details through the program.'
+    s.sendmail("www.melinazakerim9@gmail.com", email, message)
+    s.quit()
+
 def create_event(username):
     name = input('Name of the event: ')
     begins = timeinput('Beginning')
@@ -55,35 +64,35 @@ def create_event(username):
     print('Event Created successfuly!')
 
 def edit_event(name):
-    selev = input('please enter the id of the event you wish to cahnge')
-    selcol= int(input('''which column?
+    selev = input('please enter the id of the event you wish to change: ')
+    selcol= input('''which column?
              1. name
              2. beginning time 
              3. ending time
              4. location
              5. desc
              6. delete event
-             '''))
+             ''')
     newval= input('enter new values(leave blank if you are deleting): ')
 
-    if selcol == 1:
+    if selcol == '1':
         curs.execute('UPDATE Events SET name = ? WHERE id = ? AND creator = ?;', (newval, selev, name))
         conn.commit()
-    elif selcol == 2:
+    elif selcol == '2':
         if timeinput('New beginning'):
             curs.execute('UPDATE Events SET begins = ? WHERE id = ? AND creator = ?;', (newval, selev, name))
             conn.commit()
-    elif selcol == 3:
+    elif selcol == '3':
             if timeinput('New ending'):
                 curs.execute('UPDATE Events SET ends = ? WHERE id = ? AND creator = ?;', (newval, selev, name))
                 conn.commit()
-    elif selcol == 4:
+    elif selcol == '4':
         curs.execute('UPDATE Events SET location = ? WHERE id = ? AND creator = ?;', (newval, selev, name))
         conn.commit()
-    elif selcol == 5:
+    elif selcol == '5':
         curs.execute('UPDATE Events SET details = ? WHERE id = ? AND creator = ?;', (newval, selev, name))
         conn.commit()
-    elif selcol == 6:
+    elif selcol == '6':
         curs.execute('DELETE FROM Events WHERE id = ? AND creator = ?', (selev, name))
         conn.commit()
     else:
@@ -93,6 +102,7 @@ def buy_tickets(un, email):
     ev = input('Which event would you like to attend?\n')
     curs.execute('INSERT INTO Attendants (event, buyer, buyer_email) VALUES (?, ?, ?)', (ev, un, email))
     conn.commit()
+    send_email(ev, email)
 
 def checkEvents():
     curs.execute('SELECT * FROM Events')
@@ -131,7 +141,7 @@ iusername = input('Username: ')
 iemail = input('Email: ')
 if is_user(iusername, iemail):
     while run:
-        select= int(input("""
+        select= input("""
             Choose Action:
             1. Create event
             2. Edit event
@@ -139,19 +149,19 @@ if is_user(iusername, iemail):
             4. Check all events
             5. Check atttendants of an event
             6. quit
-            """))
+            """)
 
-        if select == 1:
+        if select == '1':
             create_event(iusername)
-        elif select == 2:
+        elif select == '2':
             edit_event(iusername)
-        elif select == 3:
+        elif select == '3':
             buy_tickets(iusername, iemail)
-        elif select == 4:
+        elif select == '4':
             checkEvents()
-        elif select == 5:
+        elif select == '5':
             checkAttendants()
-        elif select == 6:
+        elif select == '6':
             curs.close()
             conn.close()
             run= False
