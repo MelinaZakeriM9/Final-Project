@@ -1,7 +1,7 @@
 import datetime as dt
 import sqlite3 as sql
 
-conn = sql.connect('final.db')  #add file location later
+conn = sql.connect('final.db')
 curs = conn.cursor()
 
 curs.execute("""CREATE TABLE IF NOT EXISTS Users
@@ -56,17 +56,15 @@ def create_event(username):
 
 def edit_event(name):
     selev = input('please enter the id of the event you wish to cahnge')
-    selcol= input('''which column?
+    selcol= int(input('''which column?
              1. name
              2. beginning time 
              3. ending time
              4. location
              5. desc
              6. delete event
-             ''')
+             '''))
     newval= input('enter new values(leave blank if you are deleting): ')
-
-    selcol = int(selcol)
 
     if selcol == 1:
         curs.execute('UPDATE Events SET name = ? WHERE id = ? AND creator = ?;', (newval, selev, name))
@@ -133,7 +131,7 @@ iusername = input('Username: ')
 iemail = input('Email: ')
 if is_user(iusername, iemail):
     while run:
-        select= input("""
+        select= int(input("""
             Choose Action:
             1. Create event
             2. Edit event
@@ -141,8 +139,8 @@ if is_user(iusername, iemail):
             4. Check all events
             5. Check atttendants of an event
             6. quit
-            """)
-        select = int(select)
+            """))
+
         if select == 1:
             create_event(iusername)
         elif select == 2:
